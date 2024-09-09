@@ -21,6 +21,5 @@ input[type="text"] {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  width: 300px;
-  height: 100px/* Фиксированная ширина */
+  width: 300px;/* Фиксированная ширина */
 }
