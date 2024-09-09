@@ -11,43 +11,83 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      margin-left: 10px
+    }
+	.container {
+  	  text-align: center; 
+    }
+	#myField {
+      width: 1000px;
+      padding: 5px;
+	  clear: both;
+      border: 1px solid #ccc;
+	  margin: 0 auto; /* Центрирование по горизонтали */
+    }
+	#myField, #submitButton {
+     display: inline-block;
+     vertical-align: middle; /* Выравнивание по вертикали */
     }
   </style>
 </head>
 <body>
-
-<input type="text" id="myInput" placeholder="Введите текст">
-<button id="submitButton">Отправить</button>
+<div class="container">
+	<input type="text" name="myField" id="myField" placeholder="Введите текст">
+	<button id="submitButton">Отправить</button>
+</div>
 <div id="console"></div>
 
 <script>
-const inputField = document.getElementById('myInput');
+const inputField = document.getElementById('myField');
 const consoleDiv = document.getElementById('console');
 const submitButton = document.getElementById('submitButton');
+var fruits = ["Apple", "Orange", "Banana"];
+function newgui(beb) {
+	consoleDiv.innerHTML = ''; 
+for (var i = 0; i < beb.length; i++) {
+		
+  var p = document.createElement('p');
+  p.textContent = beb[i];
+  consoleDiv.appendChild(p);
+}
+}
+function getuniverse(placeid) {
+  return fetch("https://games.roblox.com/v1/games/multiget-place-details?placeIds=" + placeid)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data[0].universeId);
+      const universeId = data[0].universeId;
+      return universeId; // <-- Важно: возвращаем universeId из внутреннего .then()
+    });
+}
+function places(universe) {
+  return fetch("https://develop.roblox.com/v1/universes/" + universe + "/places?isUniverseCreation=false&limit=100&sortOrder=Asc")
+    .then(response => response.json())
+    .then(data => {
+      return data.data
+    });
+}
 
 function handleInput() {
   const enteredText = inputField.value;
+  getuniverse(enteredText)
+    .then(universeId => {
+		
+	  // <-- Теперь universeId будет содержать правильное значение
+      var p = document.createElement('p');
+      p.textContent = "ID вселенной: " + universeId;
+      consoleDiv.appendChild(p);
+      console.log("ID вселенной:", universeId);
+    });
 
-  // Выводим текст в консоль и на страницу
   console.log("Введенный текст:", enteredText);
-  const p = document.createElement('p');
-  p.textContent = enteredText;
-  consoleDiv.appendChild(p);
-
-  // Создаем и добавляем "Hello, world!"
-  const helloWorldP = document.createElement('p');
-  helloWorldP.textContent = "Hello, world!";
-  consoleDiv.appendChild(helloWorldP);
-
-  // Очищаем поле ввода
   inputField.value = '';
 }
-
 inputField.addEventListener('keydown', (event) => {
   if (event.key === 'Enter') {
     handleInput();
   }
 });
+
 
 submitButton.addEventListener('click', handleInput); 
 </script>
